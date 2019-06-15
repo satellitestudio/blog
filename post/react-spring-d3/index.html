@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>React spring</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../lib/prism.css">
+</head>
+<body>
+  <a id="logo" href="//satellitestud.io">
+    <svg width="150px" viewBox="0 0 183 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <desc id="logoDesc">Satellite Studio Logo</desc>
+        <path d="M34.767,1.980 C33.655,3.539 33,5.441 33,7.5 C33,12.747 37.253,17 42.5,17 C44.558,17 46.464,16.345 48.020,15.233 C49.294,18.233 50,21.534 50,25 C50,38.807 38.807,50 25,50 C11.192,50 0,38.807 0,25 C0,11.192 11.193,0 25,0 C28.466,0 31.767,0.705 34.767,1.980 Z"></path>
+        <path d="M77.488,18.616 C79.44,18.616 81.232,19.576 82.256,21.176 L80.144,23.032 C79.344,22.008 78.352,21.56 77.328,21.56 C76.496,21.56 75.728,22.104 75.728,23.16 C75.728,24.312 76.944,24.824 78.608,25.464 C80.784,26.296 83.12,27.256 83.12,30.136 C83.12,32.92 80.976,35.256 77.52,35.256 C74.192,35.256 72.112,32.952 71.28,30.936 L74.096,29.4 C74.736,30.84 75.856,32.312 77.648,32.312 C78.928,32.312 79.824,31.672 79.824,30.2 C79.824,28.792 77.872,28.408 75.984,27.608 C74.128,26.84 72.528,25.656 72.528,23.192 C72.528,20.696 74.576,18.616 77.488,18.616 Z M85.68,30.36 C85.68,27.032 88.528,25.08 92.656,25.08 L95.44,25.08 L95.44,24.376 C95.44,22.36 94,21.56 92.304,21.56 C90.992,21.56 89.84,22.264 89.296,23.704 L86.256,23.064 C86.928,20.344 89.232,18.616 92.336,18.616 C96.08,18.616 98.768,20.248 98.768,24.984 L98.768,35 L95.952,35 L95.632,32.888 C94.576,34.36 92.912,35.256 90.64,35.256 C87.952,35.256 85.68,33.72 85.68,30.36 Z M89.2,30.36 C89.2,31.448 89.808,32.312 91.216,32.312 C93.264,32.312 95.44,31 95.44,28.216 L95.44,27.864 L92.528,27.864 C90.48,27.864 89.2,28.824 89.2,30.36 Z M101.296,21.816 L101.296,18.872 L103.984,18.872 L103.984,14.424 L107.312,12.344 L107.312,18.872 L111.504,18.872 L111.504,21.816 L107.312,21.816 L107.312,29.688 C107.312,31.512 107.984,32.312 109.456,32.312 C110.032,32.312 110.416,32.216 110.992,31.864 L111.856,34.68 C110.992,35.096 110.16,35.256 109.264,35.256 C106.224,35.256 103.984,33.464 103.984,29.496 L103.984,21.816 L101.296,21.816 Z M121.648,21.56 C119.44,21.56 118.064,23.064 117.712,25.08 L125.552,25.08 C125.264,23.288 124.048,21.56 121.648,21.56 Z M129.072,26.424 L129.072,27.864 L117.648,27.864 C117.648,30.232 119.024,32.312 121.648,32.312 C123.376,32.312 125.04,31.352 125.872,29.592 L128.72,30.712 C127.152,33.752 125.328,35.256 121.648,35.256 C116.336,35.256 114.128,30.776 114.128,26.936 C114.128,23.096 116.336,18.616 121.648,18.616 C126.8,18.616 129.072,22.808 129.072,26.424 Z M132.688,12.344 L136.016,12.344 L136.016,35 L132.688,35 L132.688,12.344 Z M140.368,12.344 L143.696,12.344 L143.696,35 L140.368,35 L140.368,12.344 Z M147.248,14.328 C147.248,13.048 148.24,11.992 149.552,11.992 C150.864,11.992 151.856,13.048 151.856,14.328 C151.856,15.608 150.864,16.6 149.552,16.6 C148.24,16.6 147.248,15.608 147.248,14.328 Z M147.888,18.872 L151.216,18.872 L151.216,35 L147.888,35 L147.888,18.872 Z M154.576,21.816 L154.576,18.872 L157.264,18.872 L157.264,14.424 L160.592,12.344 L160.592,18.872 L164.784,18.872 L164.784,21.816 L160.592,21.816 L160.592,29.688 C160.592,31.512 161.264,32.312 162.736,32.312 C163.312,32.312 163.696,32.216 164.272,31.864 L165.136,34.68 C164.272,35.096 163.44,35.256 162.544,35.256 C159.504,35.256 157.264,33.464 157.264,29.496 L157.264,21.816 L154.576,21.816 Z M174.928,21.56 C172.72,21.56 171.344,23.064 170.992,25.08 L178.832,25.08 C178.544,23.288 177.328,21.56 174.928,21.56 Z M182.352,26.424 L182.352,27.864 L170.928,27.864 C170.928,30.232 172.304,32.312 174.928,32.312 C176.656,32.312 178.32,31.352 179.152,29.592 L182,30.712 C180.432,33.752 178.608,35.256 174.928,35.256 C169.616,35.256 167.408,30.776 167.408,26.936 C167.408,23.096 169.616,18.616 174.928,18.616 C180.08,18.616 182.352,22.808 182.352,26.424 Z"></path>
+    </svg>
+  </a>
+
+  <article>
+
+    <h1>React and D3: One Spring to rule them all</h1>
+
+    <cite>
+      <b>
+        One Spring to find them,<br>
+        One Spring to bring them all <br>
+        And in the Transitions bind them<br>
+      </b>
+    </cite>
+    <p>
+        When building interactive data visualisation pieces for the web, we have to make a decision on a philosophical level:
+    </p>
+    <ul>
+      <li>
+          use some kind of charting library, where we will be merely picking a bunch of predefined charts (bar chart, scatterplot, <s>pie chart</s> donut chart, etc) and change colors and fonts. Our likely output, sadly, is yet another boring and pointless dashboard;
+      </li>
+      <li>
+          roll up our sleeves, tap into the raw power of the drawing primitives of the web we know and like: DOM, SVG, Canvas, WebGL. Build something awesome that is faithful to the designer's vision, to the user expectations and to the underlying meaning of the data.
+      </li>
+    </ul>
+    <figure>
+      <img src="cone.png" alt=""/>
+      <figcaption>
+          This is a conical bivariate scatterplot, which serves as a legend to a map. Every white dot is an entity that produces a certain volume of coffee, with a given "score", representing how socially and environmentally responsible it is. The slices colors match colors on an associated map.
+      </figcaption>
+    </figure>
+
+    <p>
+        That said, if we are to (proudly) reinvent the wheel, we need two powerful tools:
+    </p>
+    
+    <ul>
+      <li>
+        <b>React</b>, the library, and the cultural shift it represents: the focus on composability, one-way data flow, and the brutal expressiveness it brings;
+      </li>
+      <li>
+          D3, aka not-a-dataviz-lib - D3 is a lot of things, but one definition we like is: a collection of tools to draw graphics in the browser, with a focus on sparing you that nth query on StackOverflow for those trigonometry formulas.
+      </li>
+    </ul>
+
+    <figure>
+      <img src="react-d3.png" alt="A D3 - React Venn diagram courtesy of Tom McWright. React: Components; React and D3: Dom; D3: Math, scale, layout, utilities, etc">
+      <figcaption>
+        A D3 - React Venn diagram courtesy of Tom McWright
+      </figcaption>
+    </figure>
+
+    <p>
+        We want to use D3 and React. Great. There is an overlap between what React and D3 do: DOM manipulation, and to some extent user events handling. Many, many, has been written on how how to deal with that, and use D3 charts within a React app (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this blogpost for a nice detailed rundown of the possible methods</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take's</a> also good). TL;DR: .
+    </p>
+
+    <hr />
+
+    <p>
+        Our approach is the result of many accumulated hours of hair-pulling, and boils down to: <b>do not, ever, let D3 anywhere near the DOM</b>. D3's idiosyncratic "select-enter-update" pattern, while very useful in isolated contexts, like a notebook or a data journalism piece, does not scale in web apps. Using a D3 component as a blackbox inside a React app, hooking up UI events with React's components lifecycle, dealing with two completely opposite programming paradigms: a headache now, and a nightmare 3 months down the road.
+    </p>
+
+    <p>
+        But. D3 still has many things we need, and chiefly: the math. From simple things like scales, to complex layout tasks, such as projecting GeoJSON coordinates to screen space and "rendering" those into SVG path instructions.
+    </p>
+
+    <p>
+        Tom McWright made a great description of this D3-React approach a while ago. The conclusion though, left us a bit frustrated:
+    </p>
+
+    <cite>
+        The elephant in the room, for some, is animation. d3 is very concerned with making animation possible and its selection API reflects that fact. Personally I avoid animation whenever possible, and so I haven't invested much time getting it to work with this approach (…).
+    </cite>
+
+    <p>
+        We did invest some time. Because animation, when done right (and with frugality), is a crucial part of interactive information design. Animation helps understanding the dynamic nature of a dataset. How values evolve over time, naturally, but also how they change when switching context (which also goes for UI transitions). If anything, <a href="https://www.youtube.com/watch?v=jbkSRLYSojo">the late Hans Rosling should convince you INVOKE HIM</a>.
+    </p>
+
+    <figure>
+      <img src="hans-rosling.gif" alt="Hans Rosling explaining a chart with his whole body">
+    </figure>
+
+    <p>
+        Transitions is a technical problem we want to tackle early on, because moving around a high number of things on a screen ties in with performance optimization and code structure.This   will have an impact on fundamental technical choices we make.
+    </p>
+
+    <p>
+        The thing is, transitions in D3 are done perfectly right. In most scenarios performance is good (sans WebGL), and to say they don't get in the way is an understatement. As in, basically, just add this line of code:
+    </p>
+
+    <pre><code class="language-js">
+.transition()
+    </code></pre>
+
+    <p>
+        But it goes hand in hand with D3's selection mechanism, which makes it a no go. The state of animation in React, on the other hand, is frankly a bit depressing, to the point where a lot of advice you can hear is: "just use CSS transitions".
+    </p>
+
+    <figure>
+      <img class="small" src="no.gif" alt="Michael Schott says no">
+    </figure>
+
+    <p>
+        The declarative nature of React does indeed make a nice developer experience for transitions complicated. Some of us, a long long long time ago, were doing Flash websites and got used to simple and fully programmable animation APIs, and want the same experience in React. One of us, namely Cheng Lou, 
+    </p>
+  
+    <p>
+      While it's certainly not new, I recently came across Cheng Lou's talk "The state of animation in React". I'm a gigantic fan of this talk, not the least because he talks about Flash with an absolutely brilliant brazenness. Yes, Flash was awesome. It's not today's topic, but let's leave it at this: Flash got animation right and we modern web developers ought to take inspiration.
+    </p>
+
+    <p>
+      Where Cheng's react-motion cleared a path, a jewel of a library named react-spring picked up.
+    </p>
+
+    <p>
+        Maps! Maps! Maps!
+        Do not bring Leaflet or Google Maps or Mapbox GL if you need to do a simple statistical map like a choropleth. First,you'd be using a rouleau compressor to plant a nail. Second, you'd be forced to use a Mercator projection, which is dumb, evil and frankly gross.
+    </p>
+
+    <p>
+        Pure react code feels really good
+    </p>
+
+
+    <iframe src="https://codesandbox.io/embed/9j482pp3no?fontsize=14" title="Radial bar chart" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+    <pre><code class="language-jsx">
+  
+  import PropTypes from 'prop-types'
+  import React, { Component } from 'react'
+  import classnames from 'classnames'
+  import ListItemStyles from 'styles/components/map/item-list.module.scss'
+  import BasemapStyles from 'styles/rightControlPanel/basemap-panel.module.scss'
+  import IconButton from 'app/components/Shared/IconButton'
+  
+  class BasemapPanel extends Component {
+    render() {
+      const basemapButtons = []
+      const basemapOptionsButtons = []
+  
+      const basemaps = this.props.basemapLayers.filter((l) => l.isOption !== true)
+      const basemapOptions = this.props.basemapLayers.filter((l) => l.isOption === true)
+  
+      basemaps.forEach((basemap) => {
+        const urlThumbnail = `${process.env.PUBLIC_URL}/basemaps/${basemap.id}.png`
+        const basemapButton = (
+          <li
+            className={classnames(
+              ListItemStyles.listItem,
+              ListItemStyles._noMobileRightPadding,
+              ListItemStyles.halfRow,
+              basemap.visible === true ? ListItemStyles._selected : null
+            )}
+            key={basemap.id}
+          >
+            <div
+              className={ListItemStyles.itemInfo}
+              onClick={() => this.props.showBasemap(basemap.id)}
+            >
+              <img alt={basemap.label} src={urlThumbnail} className={ListItemStyles.layerThumbnail} />
+              <span className={ListItemStyles.itemTitle}>{basemap.label}</span>
+            </div>
+          </li>
+        )
+  
+        basemapButtons.push(basemapButton)
+      })
+  
+      basemapOptions.forEach((basemapOption) => {
+        const basemapOptionButton = (
+          <div
+            key={basemapOption.id}
+            onClick={() => this.props.toggleBasemapOption(basemapOption.id)}
+            className={BasemapStyles.option}
+          >
+            <IconButton
+              icon={basemapOption.id}
+              activated={basemapOption.visible}
+              label={basemapOption.label || basemapOption.id}
+            />
+          </div>
+        )
+        basemapOptionsButtons.push(basemapOptionButton)
+      })
+  
+      return (
+        <div className={BasemapStyles.basemapsPanel}>
+          <ul className={ListItemStyles.list}>{basemapButtons}</ul>
+          <ul className={BasemapStyles.options}>{basemapOptionsButtons}</ul>
+        </div>
+      )
+    }
+  }
+  
+  BasemapPanel.propTypes = {
+    basemapLayers: PropTypes.array,
+    showBasemap: PropTypes.func,
+    toggleBasemapOption: PropTypes.func,
+  }
+  
+  export default BasemapPanel
+  
+    </code></pre>
+  
+    <p>More text yeah</p>
+    
+    <hr />
+    <p>More text yeah</p>
+  </article>
+  <script src="../../lib/prism.js"></script>
+  <script src="../../index.js"></script>
+</body>
+</html>

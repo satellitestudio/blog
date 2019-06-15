@@ -1,0 +1,16 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "Satellite Studio's blog",
+  "main": "index.js",
+  "repository": "git@github.com:satellitestudio/blog.git",
+  "author": "nerik <erik.escoffier@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.1",
+    "lodash": "^4.17.11"
+  },
+  "scripts": {
+    "start": "live-server --port=3333"
+  }
+}

@@ -1,0 +1,138 @@
+:root {
+  --black: #050505;
+  --white: #eee;
+  --grey:  rgba(30, 0, 0, 0.35);
+  --lightgrey:  rgba(30, 0, 0, 0.1);
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/subset-CormorantGaramond-Light.woff2') format('woff2'),
+      url('../fonts/subset-CormorantGaramond-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/subset-CormorantGaramond-LightItalic.woff2') format('woff2'),
+      url('../fonts/subset-CormorantGaramond-LightItalic.woff') format('woff');
+  font-weight: 300;
+  font-style: italic;
+}
+
+
+
+html {
+  color: var(--black);
+  background: var(--white);
+  font-size: 22px;
+}
+
+a {
+  /* text-decoration: none; */
+  color: var(--black);
+}
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  margin: 0;
+  padding: 1rem 6rem 10rem 5rem;
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  -moz-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+  -webkit-font-feature-settings: "liga", "dlig";
+  -moz-font-feature-settings: "liga", "dlig";
+  font-feature-settings: "liga", "dlig";
+}
+
+#logo {
+  width: 150px;
+  /* position: sticky;
+  top: 30px; */
+}
+
+#logo svg {
+  fill: var(--black);
+}
+
+article {
+  font-weight: 300;
+  /* font-size: calc( 32px + (54 - 32) * (100vw - 320px) / ( 840 - 320) ); */
+  line-height: 1.6rem;
+  margin: calc(40vh - 1.5em) auto;
+}
+
+p, figure, ul, cite {
+  margin: 1.3rem 0 1.8rem 0;
+}
+
+figure {
+  text-align: center;
+}
+
+figcaption {
+  font-style: italic;
+  font-size: 0.8rem;
+  line-height: 1.3rem;
+  /* color: var(--grey) */
+}
+
+img {
+  border-radius: 4px;
+  width: 100%;
+}
+
+img.medium {
+  width: 60%;
+}
+
+img.small {
+  width: 40%;
+}
+
+a {
+  text-decoration: none;
+  border-bottom-style: double;
+  border-bottom-color: var(--grey);
+}
+
+a#logo {
+  border: 0;
+}
+
+pre {
+  font-size: .6rem !important;
+}
+
+ul {
+  list-style-type: circle;
+}
+
+hr {
+  border: 0;
+}
+
+hr::after {
+  content: '⁂';
+  text-align: center;
+  display: block;
+  color: var(--grey);
+}
+
+cite {
+  display: block;
+  margin-left: .2rem;
+  padding-left: .6rem;
+  border-left-style: double;
+  border-left-color: var(--lightgrey);
+}
+
+@media (max-width: 480px) {
+  #logo {
+    width: 150px;
+  }
+  body {
+    padding: 1rem 1rem;
+  }
+}

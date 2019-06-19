@@ -19,24 +19,24 @@
 
   <article>
 
-    <h1>React and D3: One Spring to rule them all</h1>
+    <h1>React, D3 and animation: One Spring to rule them all</h1>
 
     <cite>
       <b>
         One Spring to find them,<br>
-        One Spring to bring them all <br>
-        And in the Transitions bind them<br>
+        One Spring to bring them all<br>
+        And in the transitions hook them<br>
       </b>
     </cite>
     <p>
-        When building interactive data visualisation pieces for the web, we have to make a decision on a philosophical level:
+        When building interactive data visualisation for the web, we should make a decision on a philosophical level:
     </p>
     <ul>
       <li>
           use some kind of charting library, where we will be merely picking a bunch of predefined charts (bar chart, scatterplot, <s>pie chart</s> donut chart, etc) and change colors and fonts. Our likely output, sadly, is yet another boring and pointless dashboard;
       </li>
       <li>
-          roll up our sleeves, tap into the raw power of the drawing primitives of the web we know and like: DOM, SVG, Canvas, WebGL. Build something awesome that is faithful to the designer's vision, to the user expectations and to the underlying meaning of the data.
+          roll up our sleeves, tap into the raw power of the drawing primitives of the web we know and love: the DOM, SVG, Canvas, WebGL. Build something awesome that is faithful to the designer's vision, to the user expectations and to the underlying meaning of the data.
       </li>
     </ul>
     <figure>
@@ -47,17 +47,28 @@
     </figure>
 
     <p>
-        That said, if we are to (proudly) reinvent the wheel, we need two powerful tools:
+        That said, if we are to proudly reinvent the wheel, we will need some tools. You should be already familiar with D3, *the* javascript data visualisation library, and probably already read somewhere that D3 is not really, in fact, about data visualisation. It is a low-level collection of tools to draw graphics in the browser, with a heavy focus on SVG (vector graphics). D3 is in fact, the sum of three things:
     </p>
-    
-    <ul>
+
+    <ol>
       <li>
-        <b>React</b>, the library, and the cultural shift it represents: the focus on composability, one-way data flow, and the brutal expressiveness it brings;
+        An idiosyncratic way of manipulating <b>datasets</b>: the <code>enter/exit/update</code> pattern;
       </li>
       <li>
-          D3, aka not-a-dataviz-lib - D3 is a lot of things, but one definition we like is: a collection of tools to draw graphics in the browser, with a focus on sparing you that nth query on StackOverflow for those trigonometry formulas.
+        <b>DOM manipulation</b>: generate HTML tags, attributes, styles, SVG or not, as a function of the above; 
       </li>
-    </ul>
+      <li>
+        Everything that stands in between those two, most importantly <b>layouts and generators</b>, which are responsible for turning raw data values to drawing instructions that are useful for rendering. Take for instance <a href="https://github.com/d3/d3-geo">d3-geo</a>, which turns geographical coordinates into drawing instructions for SVG paths.
+      </li>
+    </ol>
+
+
+    <hr />
+
+    <p>
+      This is great and it works incredibly well for standalone data visualisations, such as notebooks or a data-focused news article, but if you are building an application, chances are you already have something in place for both manipulating data, and manipulating the DOM. In this post we'll talk about React and how to make it play nice with D3; a topic largely explored in the past (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this blogpost for a nice detailed rundown of the possible methods</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take</a>'s also good), but we'll add a twist: <b>animations</b>.
+    </p>
+
 
     <figure>
       <img src="react-d3.png" alt="A D3 - React Venn diagram courtesy of Tom McWright. React: Components; React and D3: Dom; D3: Math, scale, layout, utilities, etc">
@@ -66,15 +77,48 @@
       </figcaption>
     </figure>
 
+    <h2>Title</h2>
+
     <p>
-        We want to use D3 and React. Great. There is an overlap between what React and D3 do: DOM manipulation, and to some extent user events handling. Many, many, has been written on how how to deal with that, and use D3 charts within a React app (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this blogpost for a nice detailed rundown of the possible methods</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take's</a> also good). TL;DR: .
+      The problem is that both React and D3 want control of the DOM. One method is to leave your graphics DOM manipulation to D3 in a blackbox, let React at the door, and try to hook D3 to your React component lifecycle when data changes. If you already tried integrating a Leaflet map to a React app for example, that would feel quite similar.
+    </p>
+
+    <p>
+      You will end up with dealing with two completely opposite programming paradigms: a headache now, and a nightmare 3 months from now. From experience, our take is simple: <b>do not, ever, let D3 anywhere near the DOM in a React app</b>.
     </p>
 
     <hr />
 
     <p>
-        Our approach is the result of many accumulated hours of hair-pulling, and boils down to: <b>do not, ever, let D3 anywhere near the DOM</b>. D3's idiosyncratic "select-enter-update" pattern, while very useful in isolated contexts, like a notebook or a data journalism piece, does not scale in web apps. Using a D3 component as a blackbox inside a React app, hooking up UI events with React's components lifecycle, dealing with two completely opposite programming paradigms: a headache now, and a nightmare 3 months down the road.
+      Instead, we'll be taking a leap of faith and write our own DOM in React, from the most humble bar chart to the most convoluted bivariate tilegrid map (yes, <a href="https://xeno.graphics/bivariate-tilegrid-map/">it's a thing</a>).
     </p>
+    <p>
+      In the case of the former, we can draw things using divs, and bypass D3 entirely, apart from its very useful <a href="https://github.com/d3/d3-scale">scales</a>. For more complex use cases, we will need to know some SVG basics, and use what D3 is incredibly great at: <b>the math</b>, in the form of layouts and generators, as explained earlier. This gives you full control of the presentation, while sparing you yet another StackOverflow search for that trigonometry formula.
+    </p>
+
+    <p>
+
+    </p>
+
+    <p>
+      We will see that in action in the following examples: a radial bar chart, a sankey, and a spinning globe.
+    </p>
+
+
+
+    <hr />
+
+    <iframe src="https://codesandbox.io/embed/d3-react-bubble-chart-92lfm?fontsize=14" title="d3 React bubble chart" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+
+    <iframe src="https://codesandbox.io/embed/radial-bar-chart-react-d3-spring-hooks-2lul1?fontsize=14" title="radial bar chart react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+
+
+    <iframe src="https://codesandbox.io/embed/sankey-react-d3-spring-hooks-c7vef?fontsize=14" title="sankey react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+    <iframe src="https://codesandbox.io/embed/miniglobe-with-d3-react-spring-rz7nl?fontsize=14" title="Miniglobe with D3 + React + Spring" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
 
     <p>
         But. D3 still has many things we need, and chiefly: the math. From simple things like scales, to complex layout tasks, such as projecting GeoJSON coordinates to screen space and "rendering" those into SVG path instructions.
@@ -137,8 +181,6 @@
         Pure react code feels really good
     </p>
 
-
-    <iframe src="https://codesandbox.io/embed/9j482pp3no?fontsize=14" title="Radial bar chart" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
     <pre><code class="language-jsx">
   

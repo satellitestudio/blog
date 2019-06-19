@@ -1,5 +1,5 @@
 :root {
-  --black: #050505;
+  --black: #111;
   --white: #eee;
   --grey:  rgba(30, 0, 0, 0.35);
   --lightgrey:  rgba(30, 0, 0, 0.1);
@@ -21,7 +21,21 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/subset-CormorantGaramond-SemiBold.woff2') format('woff2'),
+      url('../fonts/subset-CormorantGaramond-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/subset-CormorantGaramond-Regular.woff2') format('woff2'),
+      url('../fonts/subset-CormorantGaramond-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 html {
   color: var(--black);
@@ -29,13 +43,9 @@ html {
   font-size: 22px;
 }
 
-a {
-  /* text-decoration: none; */
-  color: var(--black);
-}
-
 body {
   font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
   margin: 0;
   padding: 1rem 6rem 10rem 5rem;
   -webkit-font-variant-ligatures: discretionary-ligatures;
@@ -44,6 +54,17 @@ body {
   -webkit-font-feature-settings: "liga", "dlig";
   -moz-font-feature-settings: "liga", "dlig";
   font-feature-settings: "liga", "dlig";
+  font-display: 
+}
+
+a {
+  /* text-decoration: none; */
+  color: var(--black);
+}
+
+b, h2 {
+  color: #000;
+  font-weight: normal;
 }
 
 #logo {
@@ -58,8 +79,9 @@ body {
 
 article {
   font-weight: 300;
+  font-size: 1.1rem;
   /* font-size: calc( 32px + (54 - 32) * (100vw - 320px) / ( 840 - 320) ); */
-  line-height: 1.6rem;
+  line-height: 1.9rem;
   margin: calc(40vh - 1.5em) auto;
 }
 
@@ -102,7 +124,11 @@ a#logo {
 }
 
 pre {
-  font-size: .6rem !important;
+  font-size: .7rem !important;
+}
+
+code {
+  font-size: .7rem
 }
 
 ul {

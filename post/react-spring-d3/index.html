@@ -17,20 +17,20 @@
     </svg>
   </a>
 
-  <article>
+  <article lang="en">
 
     <h1>React, D3 and animation: One Spring to rule them all</h1>
 
     <cite>
-      <b>
         One Spring to find them,<br>
         One Spring to bring them all<br>
         And in the transitions hook them<br>
-      </b>
     </cite>
+
     <p>
         When building interactive data visualisation for the web, we should make a decision on a philosophical level:
     </p>
+
     <ul>
       <li>
           use some kind of charting library, where we will be merely picking a bunch of predefined charts (bar chart, scatterplot, <s>pie chart</s> donut chart, etc) and change colors and fonts. Our likely output, sadly, is yet another boring and pointless dashboard;
@@ -39,6 +39,7 @@
           roll up our sleeves, tap into the raw power of the drawing primitives of the web we know and love: the DOM, SVG, Canvas, WebGL. Build something awesome that is faithful to the designer's vision, to the user expectations and to the underlying meaning of the data.
       </li>
     </ul>
+
     <figure>
       <img src="cone.png" alt=""/>
       <figcaption>
@@ -52,23 +53,21 @@
 
     <ol>
       <li>
-        An idiosyncratic way of manipulating <b>datasets</b>: the <code>enter/exit/update</code> pattern;
+        An idiosyncratic way of manipulating <strong>datasets</strong>: the <code>enter/exit/update</code> pattern;
       </li>
       <li>
-        <b>DOM manipulation</b>: generate HTML tags, attributes, styles, SVG or not, as a function of the above; 
+        <strong>DOM manipulation</strong>: generate HTML tags, attributes, styles, SVG or not, as a function of the above;
       </li>
       <li>
-        Everything that stands in between those two, most importantly <b>layouts and generators</b>, which are responsible for turning raw data values to drawing instructions that are useful for rendering. Take for instance <a href="https://github.com/d3/d3-geo">d3-geo</a>, which turns geographical coordinates into drawing instructions for SVG paths.
+        Everything that stands in between those two, most importantly <strong>layouts and generators</strong>, which are responsible for turning raw data values to drawing instructions that are useful for rendering. Take for instance <a href="https://github.com/d3/d3-geo">d3-geo</a>, which turns geographical coordinates into drawing instructions for SVG paths.
       </li>
     </ol>
-
 
     <hr />
 
     <p>
-      This is great and it works incredibly well for standalone data visualisations, such as notebooks or a data-focused news article, but if you are building an application, chances are you already have something in place for both manipulating data, and manipulating the DOM. In this post we'll talk about React and how to make it play nice with D3; a topic largely explored in the past (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this blogpost for a nice detailed rundown of the possible methods</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take</a>'s also good), but we'll add a twist: <b>animations</b>.
+      This is great and it works incredibly well for standalone data visualisations, such as notebooks or a data-focused news article, but if you are building an application, chances are you already have something in place for both manipulating data, and manipulating the DOM. In this post we'll talk about React and how to make it play nice with D3; a topic largely explored in the past (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this blogpost for a nice detailed rundown of the possible methods</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take</a>'s also good), but we'll add a twist: <strong>animations</strong>.
     </p>
-
 
     <figure>
       <img src="react-d3.png" alt="A D3 - React Venn diagram courtesy of Tom McWright. React: Components; React and D3: Dom; D3: Math, scale, layout, utilities, etc">
@@ -84,7 +83,7 @@
     </p>
 
     <p>
-      You will end up with dealing with two completely opposite programming paradigms: a headache now, and a nightmare 3 months from now. From experience, our take is simple: <b>do not, ever, let D3 anywhere near the DOM in a React app</b>.
+      You will end up with dealing with two completely opposite programming paradigms: a headache now, and a nightmare 3 months from now. From experience, our take is simple: <strong>do not, ever, let D3 anywhere near the DOM in a React app</strong>.
     </p>
 
     <hr />
@@ -93,32 +92,22 @@
       Instead, we'll be taking a leap of faith and write our own DOM in React, from the most humble bar chart to the most convoluted bivariate tilegrid map (yes, <a href="https://xeno.graphics/bivariate-tilegrid-map/">it's a thing</a>).
     </p>
     <p>
-      In the case of the former, we can draw things using divs, and bypass D3 entirely, apart from its very useful <a href="https://github.com/d3/d3-scale">scales</a>. For more complex use cases, we will need to know some SVG basics, and use what D3 is incredibly great at: <b>the math</b>, in the form of layouts and generators, as explained earlier. This gives you full control of the presentation, while sparing you yet another StackOverflow search for that trigonometry formula.
-    </p>
-
-    <p>
-
+      In the case of the former, we can draw things using divs, and bypass D3 entirely, apart from its very useful <a href="https://github.com/d3/d3-scale">scales</a>. For more complex use cases, we will need to know some SVG basics, and use what D3 is incredibly great at: <strong>the math</strong>, in the form of layouts and generators, as explained earlier. This gives you full control of the presentation, while sparing you yet another StackOverflow search for that trigonometry formula.
     </p>
 
     <p>
       We will see that in action in the following examples: a radial bar chart, a sankey, and a spinning globe.
     </p>
 
-
-
     <hr />
 
     <iframe src="https://codesandbox.io/embed/d3-react-bubble-chart-92lfm?fontsize=14" title="d3 React bubble chart" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
-
     <iframe src="https://codesandbox.io/embed/radial-bar-chart-react-d3-spring-hooks-2lul1?fontsize=14" title="radial bar chart react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-
-
 
     <iframe src="https://codesandbox.io/embed/sankey-react-d3-spring-hooks-c7vef?fontsize=14" title="sankey react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
     <iframe src="https://codesandbox.io/embed/miniglobe-with-d3-react-spring-rz7nl?fontsize=14" title="Miniglobe with D3 + React + Spring" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-
 
     <p>
         But. D3 still has many things we need, and chiefly: the math. From simple things like scales, to complex layout tasks, such as projecting GeoJSON coordinates to screen space and "rendering" those into SVG path instructions.
@@ -157,13 +146,13 @@
     </p>
 
     <figure>
-      <img class="small" src="no.gif" alt="Michael Schott says no">
+      <img class="small" src="no.gif" alt="Michael Scott says no">
     </figure>
 
     <p>
         The declarative nature of React does indeed make a nice developer experience for transitions complicated. Some of us, a long long long time ago, were doing Flash websites and got used to simple and fully programmable animation APIs, and want the same experience in React. One of us, namely Cheng Lou, 
     </p>
-  
+
     <p>
       While it's certainly not new, I recently came across Cheng Lou's talk "The state of animation in React". I'm a gigantic fan of this talk, not the least because he talks about Flash with an absolutely brilliant brazenness. Yes, Flash was awesome. It's not today's topic, but let's leave it at this: Flash got animation right and we modern web developers ought to take inspiration.
     </p>
@@ -183,22 +172,22 @@
 
 
     <pre><code class="language-jsx">
-  
+
   import PropTypes from 'prop-types'
   import React, { Component } from 'react'
   import classnames from 'classnames'
   import ListItemStyles from 'styles/components/map/item-list.module.scss'
   import BasemapStyles from 'styles/rightControlPanel/basemap-panel.module.scss'
   import IconButton from 'app/components/Shared/IconButton'
-  
+
   class BasemapPanel extends Component {
     render() {
       const basemapButtons = []
       const basemapOptionsButtons = []
-  
+
       const basemaps = this.props.basemapLayers.filter((l) => l.isOption !== true)
       const basemapOptions = this.props.basemapLayers.filter((l) => l.isOption === true)
-  
+
       basemaps.forEach((basemap) => {
         const urlThumbnail = `${process.env.PUBLIC_URL}/basemaps/${basemap.id}.png`
         const basemapButton = (
@@ -220,10 +209,10 @@
             </div>
           </li>
         )
-  
+
         basemapButtons.push(basemapButton)
       })
-  
+
       basemapOptions.forEach((basemapOption) => {
         const basemapOptionButton = (
           <div
@@ -240,7 +229,7 @@
         )
         basemapOptionsButtons.push(basemapOptionButton)
       })
-  
+
       return (
         <div className={BasemapStyles.basemapsPanel}>
           <ul className={ListItemStyles.list}>{basemapButtons}</ul>
@@ -249,19 +238,19 @@
       )
     }
   }
-  
+
   BasemapPanel.propTypes = {
     basemapLayers: PropTypes.array,
     showBasemap: PropTypes.func,
     toggleBasemapOption: PropTypes.func,
   }
-  
+
   export default BasemapPanel
-  
+
     </code></pre>
-  
+
     <p>More text yeah</p>
-    
+
     <hr />
     <p>More text yeah</p>
   </article>

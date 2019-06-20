@@ -1,76 +1,70 @@
 :root {
   --black: #111;
-  --white: #eee;
-  --grey:  rgba(30, 0, 0, 0.35);
-  --lightgrey:  rgba(30, 0, 0, 0.1);
+  --white: #efefef;
+  --lightgrey: rgba(0, 0, 0, 0.3);
 }
 
 @font-face {
-  font-family: 'Cormorant Garamond';
-  src: url('../fonts/subset-CormorantGaramond-Light.woff2') format('woff2'),
-      url('../fonts/subset-CormorantGaramond-Light.woff') format('woff');
-  font-weight: 300;
+  font-family: "Cormorant Garamond";
+  src: url("../fonts/cormorantgaramond-medium.woff2") format("woff2"),
+    url("../fonts/cormorantgaramond-medium.woff") format("woff");
+  font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Cormorant Garamond';
-  src: url('../fonts/subset-CormorantGaramond-LightItalic.woff2') format('woff2'),
-      url('../fonts/subset-CormorantGaramond-LightItalic.woff') format('woff');
-  font-weight: 300;
+  font-family: "Cormorant Garamond";
+  src: url("../fonts/cormorantgaramond-mediumitalic.woff2") format("woff2"),
+    url("../fonts/cormorantgaramond-mediumitalic.woff") format("woff");
+  font-weight: 400;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'Cormorant Garamond';
-  src: url('../fonts/subset-CormorantGaramond-SemiBold.woff2') format('woff2'),
-      url('../fonts/subset-CormorantGaramond-SemiBold.woff') format('woff');
+  font-family: "Cormorant Garamond";
+  src: url("../fonts/cormorantgaramond-bold.woff2") format("woff2"),
+    url("../fonts/cormorantgaramond-bold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Cormorant Garamond';
-  src: url('../fonts/subset-CormorantGaramond-Regular.woff2') format('woff2'),
-      url('../fonts/subset-CormorantGaramond-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+  font-family: "Cormorant Garamond";
+  src: url("../fonts/cormorantgaramond-bolditalic.woff2") format("woff2"),
+    url("../fonts/cormorantgaramond-bolditalic.woff") format("woff");
+  font-weight: 600;
+  font-style: italic;
 }
 
 html {
   color: var(--black);
   background: var(--white);
-  font-size: 22px;
+  font-size: 10px;
 }
 
 body {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  margin: 0;
-  padding: 1rem 6rem 10rem 5rem;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 400;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  max-width: 100rem;
   -webkit-font-variant-ligatures: discretionary-ligatures;
   -moz-font-variant-ligatures: discretionary-ligatures;
   font-variant-ligatures: discretionary-ligatures;
   -webkit-font-feature-settings: "liga", "dlig";
   -moz-font-feature-settings: "liga", "dlig";
   font-feature-settings: "liga", "dlig";
-  font-display: 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.02em;
 }
 
 a {
-  /* text-decoration: none; */
   color: var(--black);
-}
-
-b, h2 {
-  color: #000;
-  font-weight: normal;
 }
 
 #logo {
   width: 150px;
-  /* position: sticky;
-  top: 30px; */
 }
 
 #logo svg {
@@ -78,15 +72,47 @@ b, h2 {
 }
 
 article {
-  font-weight: 300;
-  font-size: 1.1rem;
-  /* font-size: calc( 32px + (54 - 32) * (100vw - 320px) / ( 840 - 320) ); */
-  line-height: 1.9rem;
-  margin: calc(40vh - 1.5em) auto;
+  font-size: 2.3rem;
+  line-height: 3.6rem;
+  margin: 20rem auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
 }
 
-p, figure, ul, cite {
-  margin: 1.3rem 0 1.8rem 0;
+h1 {
+  font-weight: 600;
+  font-size: 4.6rem;
+  line-height: 5.4rem;
+}
+
+p,
+ol,
+ul,
+h1,
+h2,
+pre {
+  max-width: 70rem;
+  margin: 4rem auto !important;
+}
+
+cite {
+  display: block;
+  padding-left: 1.5rem;
+  border-left-style: double;
+  border-left-color: var(--lightgrey);
+  max-width: 56rem;
+  margin: 4rem auto !important;
+  opacity: 0.7;
+}
+
+figure,
+ul,
+ol,
+cite {
+  margin: 4rem 0;
 }
 
 figure {
@@ -95,13 +121,12 @@ figure {
 
 figcaption {
   font-style: italic;
-  font-size: 0.8rem;
-  line-height: 1.3rem;
-  /* color: var(--grey) */
+  font-size: 1.8rem;
+  line-height: 2.1rem;
 }
 
 img {
-  border-radius: 4px;
+  border-radius: 0.4rem;
   width: 100%;
 }
 
@@ -116,7 +141,7 @@ img.small {
 a {
   text-decoration: none;
   border-bottom-style: double;
-  border-bottom-color: var(--grey);
+  border-bottom-color: var(--lightgrey);
 }
 
 a#logo {
@@ -124,15 +149,26 @@ a#logo {
 }
 
 pre {
-  font-size: .7rem !important;
+  font-size: 1.3rem !important;
 }
 
 code {
-  font-size: .7rem
+  font-size: 0.8em;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+strong {
+  font-weight: 600;
 }
 
 ul {
   list-style-type: circle;
+}
+
+li {
+  margin-bottom: 1rem;
 }
 
 hr {
@@ -140,25 +176,8 @@ hr {
 }
 
 hr::after {
-  content: '⁂';
+  content: "⁂";
   text-align: center;
   display: block;
   color: var(--grey);
-}
-
-cite {
-  display: block;
-  margin-left: .2rem;
-  padding-left: .6rem;
-  border-left-style: double;
-  border-left-color: var(--lightgrey);
-}
-
-@media (max-width: 480px) {
-  #logo {
-    width: 150px;
-  }
-  body {
-    padding: 1rem 1rem;
-  }
 }

@@ -19,14 +19,14 @@
 
   <article>
 
-    <h1>React, D3 and animation: One Spring to rule them all</h1>
+    <h1>React, D3 and animation: One Spring to rule all dataviz</h1>
 
     <cite>
-      <b>
+      <strong>
         One Spring to find them,<br>
         One Spring to bring them all<br>
         And in the transitions hook them<br>
-      </b>
+      </strong>
     </cite>
     <p>
         When building interactive data visualisation for the web, we should make a decision on a philosophical level:
@@ -52,13 +52,13 @@
 
     <ol>
       <li>
-        An idiosyncratic way of manipulating <b>datasets</b>: the <code>enter/exit/update</code> pattern;
+        An idiosyncratic way of manipulating <strong>datasets</strong>: the <code>enter/exit/update</code> pattern;
       </li>
       <li>
-        <b>DOM manipulation</b>: generate HTML tags, attributes, styles, SVG or not, as a function of the above; 
+        <strong>DOM manipulation</strong>: generate HTML tags, attributes, styles, SVG or not, as a function of the above; 
       </li>
       <li>
-        Everything that stands in between those two, most importantly <b>layouts and generators</b>, which are responsible for turning raw data values to drawing instructions that are useful for rendering. Take for instance <a href="https://github.com/d3/d3-geo">d3-geo</a>, which turns geographical coordinates into drawing instructions for SVG paths.
+        Everything that stands in between those two, most importantly <strong>layouts and generators</strong>, which are responsible for turning raw data values to drawing instructions that are useful for rendering. Take for instance <a href="https://github.com/d3/d3-geo">d3-geo</a>, which turns geographical coordinates into drawing instructions for SVG paths.
       </li>
     </ol>
 
@@ -66,7 +66,7 @@
     <hr />
 
     <p>
-      This is great and it works incredibly well for standalone data visualisations, such as notebooks or a data-focused news article, but if you are building an application, chances are you already have something in place for both manipulating data, and manipulating the DOM. In this post we'll talk about React and how to make it play nice with D3; a topic largely explored in the past (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this blogpost for a nice detailed rundown of the possible methods</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take</a>'s also good), but we'll add a twist: <b>animations</b>.
+      This is great and it works incredibly well for standalone data visualisations, such as notebooks or a data-focused news article, but if you are building an application, chances are you already have something in place for both manipulating data, and manipulating the DOM. In this post we'll talk about React and how to make it play nice with D3; a topic already largely explored (see <a href="https://medium.com/@tibotiber/react-d3-js-balancing-performance-developer-experience-4da35f912484">this recap blogpost</a>, <a href="https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71">Elijah Meeks take</a>'s also good), but we'll add a twist: <strong>animation</strong>.
     </p>
 
 
@@ -84,7 +84,7 @@
     </p>
 
     <p>
-      You will end up with dealing with two completely opposite programming paradigms: a headache now, and a nightmare 3 months from now. From experience, our take is simple: <b>do not, ever, let D3 anywhere near the DOM in a React app</b>.
+      Doing that, you will end up with two completely opposite programming paradigms: a headache now, and a nightmare 3 months from now. From experience, our take is simple: <strong>do not, ever, let D3 anywhere near the DOM in a React app</strong>.
     </p>
 
     <hr />
@@ -93,36 +93,125 @@
       Instead, we'll be taking a leap of faith and write our own DOM in React, from the most humble bar chart to the most convoluted bivariate tilegrid map (yes, <a href="https://xeno.graphics/bivariate-tilegrid-map/">it's a thing</a>).
     </p>
     <p>
-      In the case of the former, we can draw things using divs, and bypass D3 entirely, apart from its very useful <a href="https://github.com/d3/d3-scale">scales</a>. For more complex use cases, we will need to know some SVG basics, and use what D3 is incredibly great at: <b>the math</b>, in the form of layouts and generators, as explained earlier. This gives you full control of the presentation, while sparing you yet another StackOverflow search for that trigonometry formula.
+      In the case of the former, we can draw things using divs, and bypass D3 entirely, apart from its very useful <a href="https://github.com/d3/d3-scale">scales</a>. For more complex use cases, we will need to know some SVG basics, and use D3 layouts and generators (aka the math that you don't want to write), as explained earlier. This gives you full control of the presentation, while sparing you yet another StackOverflow search for that trigonometry formula.
     </p>
 
     <p>
-
+      We'll see examples of this with a radial bar chart, a sankey, and a spinning globe. But first, a <strong>bubble diagram</strong>:
     </p>
+
+
+    <iframe src="https://codesandbox.io/embed/d3-react-bubble-chart-92lfm?fontsize=14" title="d3 React bubble chart" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:600px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
     <p>
-      We will see that in action in the following examples: a radial bar chart, a sankey, and a spinning globe.
+      Or more fancily, an <strong>enclosure diagram with circle packing</strong>. This example to show you how we let D3 do the fancy work:
     </p>
 
+    <pre>
+      <code class="language-js">
+import { pack, hierarchy } from "d3-hierarchy";
+import { scaleSequential } from "d3-scale"
+import { interpolateYlOrRd, interpolateGreys } from "d3-scale-chromatic"
 
+...
+
+const nodes = hierarchy(data)
+  .sum(function(d) { return d.pop; });
+
+const packLayout = pack(data)
+  .size([WIDTH, HEIGHT])
+  .padding(10)
+
+const root = packLayout(nodes)
+
+const colorScale = scaleSequential([0, 100], interpolateYlOrRd)
+const colorScaleRegions = scaleSequential([0, 3000], interpolateGreys)
+      </code>
+    </pre>
+
+    <ul>
+      <li>
+        <code>hierarchy</code> generates useful additional data for our dataset: the sum of population for each of the European regions.
+      </li>
+      <li>
+        <code>pack</code> is a d3 <b>layout</b> (<a href="https://github.com/d3/d3-hierarchy#pack">Pack documentation</a>). By far the most interesting bit: it makes a function that takes our dataset made of names and populations, and turns it into actionable values to render: x and y positions, and circle radii. We only have to call it whenever we have a new dataset to render; here the <code>root</code> object is ready to be painted into SVG primitives.
+      </li>
+      <li>
+        Lastly, two color <b>scales</b> (<a href="https://github.com/d3/d3-scale">documentation</a>), aka two functions that will take a population value and return a color along a color scale. Scales can also be for numbers, time, etc.
+      </li>
+    </ul>
+
+    <p>Generators, layouts and scales are the trinity of D3-in-React. You should not need anything else from D3.</p>
 
     <hr />
 
-    <iframe src="https://codesandbox.io/embed/d3-react-bubble-chart-92lfm?fontsize=14" title="d3 React bubble chart" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+    <p>
+      The rest is standard React stuff, but we let's at least look at the SVG part:
+    </p>
 
+    <script type="text/plain" class="language-markup">
+      <p>Example</p>
+   </script>
+    <pre>
+        <code class="language-markup">
+            <script type="prism-html-markup">
+                <h1 class="foo">h1. Heading 1</h1>
+                <h2>h2. Heading 2</h2>
+                <h3>h3. Heading 3</h3>
+                <h4>h4. Heading 4</h4>
+                <h5>h5. Heading 5</h5>
+                <h6>h6. Heading 6</h6>
+            </script>
+        </code>
+    </pre>
 
-    <iframe src="https://codesandbox.io/embed/radial-bar-chart-react-d3-spring-hooks-2lul1?fontsize=14" title="radial bar chart react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+    <pre class="language-markup">
+        <code class="language-markup">
+          <b>lala</b>
+          </code>
+        </pre>
 
-
-
-    <iframe src="https://codesandbox.io/embed/sankey-react-d3-spring-hooks-c7vef?fontsize=14" title="sankey react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-
-    <iframe src="https://codesandbox.io/embed/miniglobe-with-d3-react-spring-rz7nl?fontsize=14" title="Miniglobe with D3 + React + Spring" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-
+    <pre class="language-jsx">
+      <code><!--
+const Bubble = ({leaf}) => {
+  // Use x and y coordinates generated by D3 pack layout to position 
+  // an SVG group.
+  const emojiSize = Math.max(14, leaf.r)
+  return <g transform={`translate(${leaf.x},${leaf.y})`}>
+    <circle
+      r={leaf.r}
+      fill={(leaf.data.pop) ? colorScale(leaf.data.pop) : colorScaleRegions(leaf.value)}
+    >
+      <title>
+        {leaf.data.name} - {leaf.data.pop || leaf.value}M
+      </title>
+    </circle>
+    <text
+      y={emojiSize/2.3}
+      style={{fontSize: `${emojiSize}px`}}
+    >
+      {leaf.data.emoji}
+    </text>
+  </g>
+}-->
+      </code>
+    </pre>
 
     <p>
-        But. D3 still has many things we need, and chiefly: the math. From simple things like scales, to complex layout tasks, such as projecting GeoJSON coordinates to screen space and "rendering" those into SVG path instructions.
+      This is where a bit of SVG knowledge comes in handy.
     </p>
+
+    <hr />
+
+    <p>
+      It's interesting to note that we could have used normal DOM instead of SVG to render the exact same chart. Should we though? While SVG can be a weird beast and has it quirks (text and gradients in particular), it gives us a lot more flexibility and access to complex shapes such as polylines and curves, which we'll make use of later.
+    </p>
+
+    <h2>
+      Animation
+    </h2>
+
+
 
     <p>
         Tom McWright made a great description of this D3-React approach a while ago. The conclusion though, left us a bit frustrated:
@@ -172,98 +261,20 @@
       Where Cheng's react-motion cleared a path, a jewel of a library named react-spring picked up.
     </p>
 
-    <p>
-        Maps! Maps! Maps!
-        Do not bring Leaflet or Google Maps or Mapbox GL if you need to do a simple statistical map like a choropleth. First,you'd be using a rouleau compressor to plant a nail. Second, you'd be forced to use a Mercator projection, which is dumb, evil and frankly gross.
-    </p>
 
-    <p>
-        Pure react code feels really good
-    </p>
+    <iframe src="https://codesandbox.io/embed/radial-bar-chart-react-d3-spring-hooks-2lul1?fontsize=14" title="radial bar chart react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
 
-    <pre><code class="language-jsx">
+
+    <iframe src="https://codesandbox.io/embed/sankey-react-d3-spring-hooks-c7vef?fontsize=14" title="sankey react + d3 + spring + hooks" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+    <iframe src="https://codesandbox.io/embed/miniglobe-with-d3-react-spring-rz7nl?fontsize=14" title="Miniglobe with D3 + React + Spring" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+
+ 
+
   
-  import PropTypes from 'prop-types'
-  import React, { Component } from 'react'
-  import classnames from 'classnames'
-  import ListItemStyles from 'styles/components/map/item-list.module.scss'
-  import BasemapStyles from 'styles/rightControlPanel/basemap-panel.module.scss'
-  import IconButton from 'app/components/Shared/IconButton'
-  
-  class BasemapPanel extends Component {
-    render() {
-      const basemapButtons = []
-      const basemapOptionsButtons = []
-  
-      const basemaps = this.props.basemapLayers.filter((l) => l.isOption !== true)
-      const basemapOptions = this.props.basemapLayers.filter((l) => l.isOption === true)
-  
-      basemaps.forEach((basemap) => {
-        const urlThumbnail = `${process.env.PUBLIC_URL}/basemaps/${basemap.id}.png`
-        const basemapButton = (
-          <li
-            className={classnames(
-              ListItemStyles.listItem,
-              ListItemStyles._noMobileRightPadding,
-              ListItemStyles.halfRow,
-              basemap.visible === true ? ListItemStyles._selected : null
-            )}
-            key={basemap.id}
-          >
-            <div
-              className={ListItemStyles.itemInfo}
-              onClick={() => this.props.showBasemap(basemap.id)}
-            >
-              <img alt={basemap.label} src={urlThumbnail} className={ListItemStyles.layerThumbnail} />
-              <span className={ListItemStyles.itemTitle}>{basemap.label}</span>
-            </div>
-          </li>
-        )
-  
-        basemapButtons.push(basemapButton)
-      })
-  
-      basemapOptions.forEach((basemapOption) => {
-        const basemapOptionButton = (
-          <div
-            key={basemapOption.id}
-            onClick={() => this.props.toggleBasemapOption(basemapOption.id)}
-            className={BasemapStyles.option}
-          >
-            <IconButton
-              icon={basemapOption.id}
-              activated={basemapOption.visible}
-              label={basemapOption.label || basemapOption.id}
-            />
-          </div>
-        )
-        basemapOptionsButtons.push(basemapOptionButton)
-      })
-  
-      return (
-        <div className={BasemapStyles.basemapsPanel}>
-          <ul className={ListItemStyles.list}>{basemapButtons}</ul>
-          <ul className={BasemapStyles.options}>{basemapOptionsButtons}</ul>
-        </div>
-      )
-    }
-  }
-  
-  BasemapPanel.propTypes = {
-    basemapLayers: PropTypes.array,
-    showBasemap: PropTypes.func,
-    toggleBasemapOption: PropTypes.func,
-  }
-  
-  export default BasemapPanel
-  
-    </code></pre>
-  
-    <p>More text yeah</p>
-    
-    <hr />
-    <p>More text yeah</p>
+
   </article>
   <script src="../../lib/prism.js"></script>
   <script src="../../index.js"></script>

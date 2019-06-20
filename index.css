@@ -179,5 +179,5 @@ hr::after {
   content: "⁂";
   text-align: center;
   display: block;
-  color: var(--grey);
+  color: var(--lightgrey);
 }

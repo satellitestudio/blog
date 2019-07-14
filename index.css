@@ -125,16 +125,16 @@ figcaption {
   line-height: 2.1rem;
 }
 
-img {
+img, video {
   border-radius: 0.4rem;
   width: 100%;
 }
 
-img.medium {
+img.medium, video.medium {
   width: 60%;
 }
 
-img.small {
+img.small, video.small {
   width: 40%;
 }
 

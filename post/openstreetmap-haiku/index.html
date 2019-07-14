@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>React spring</title>
+  <title>OpenStreetMap Haiku</title>
   <link rel="stylesheet" href="../../index.css">
   <link rel="stylesheet" href="../../lib/prism.css">
 </head>
@@ -19,29 +19,288 @@
 
   <article>
 
-    <h1>openstreetmap-haiku</h1>
+    <h1>OpenStreetMap Haiku:<br>Using OSM and Overpass for generative poetry</h1>
+
+    <cite>
+      Full bellies at Bombay Lounge<br>
+      Looking at you from the 4th floor<br>
+      Is it too early for a beer?
+    </cite>
 
     <p>
-        Hello!
+      A bit of random poetry about some corner of London, generated at 11am today. About the same place, looking around, one could also write:
     </p>
 
-    <pre>
-      <code class="language-js">
-        let world
-      </code>
-    </pre>
-        
+    <cite>
+      A couple getting a loan<br>
+      Yawns in the classroom<br>
+      A train underneath
+    </cite>
+
+    <p>
+      Or maybe, a mile from there:
+    </p>
+
+    <cite>
+      On the water’s surface<br>
+      Going to work<br>
+      Flipping burgers
+    </cite>
+
     <figure>
-      <img class="small" src="https://placekitten.com/200/286" alt="A cat"/>
+      <video autoplay loop muted playsinline class="medium">
+        <source src="osm-haiku.webm" type="video/webm">
+      </video>
+    </figure>
+
+
+    <p>
+      And so on.
+    </p>
+
+    <hr />
+
+    <p>
+      Here's what's happening: we automated making haikus about places. Looking at every identifiable object from the surroundings of a point, we can generate a poem about any place in the world. The result is sometimes fun. Often weird. Most of the time, rather terrible. Probably horrifying for haiku purists (sorry). Go ahead and <a href="http://satellitestud.io/osm-haiku/app/">give it a try</a>.
+    </p>
+
+    <p>
+      Those text collages are assembled using information about the place, taken from OpenStreetMap. As we all know now, “OpenStreetMap is not a map®” - it’s a big database. A database of all the things in the world. In fact, one can browse the list of <a href="https://wiki.openstreetmap.org/wiki/Map_Features">all OSM tags on the OSM wiki</a> and observe the following fact: this is nothing less than an attempt at methodically <b>classifying our reality</b>. So yep, it's a pretty long wiki page.
+    </p>
+
+    TODO capture
+
+    <p>
+      So in our little project, we take advantage of that crazy thing by matching OSM tags with badly written verses.<br>
+      If a supermarket is close to the map center, (ie it has a tag <code>shop=supermarket</code>), we would randomly yield one of: ‘Salad cabbage and carrots’, ‘The cashier’s bored’, ‘A lonely aisle’, ‘Under the neon’, etc.<br>
+      A swimming pool (tag <code>leisure=swimming_pool</code>): ‘Smells of chlorine’.<br>
+      A garage (tag <code>building=garage</code>): ‘In the garage where I belong’ (shameless Weezer fan here).<br>
+      A coffee shop named ‘Grey House’ (tags <code>amenity=cafe</code> and <code>name=‘Grey House’</code>: “Fresh coffee from Grey House”.<br>
+      And so on.
+    </p>
+
+    TODO environmental
+
+    <p>
+      That set of verses is easily extendable - <a href="https://github.com/satellitestudio/osm-haiku/edit/master/app/lines.en.js">have a look and add yours :)</a>
+    </p>
+
+    <hr />
+
+    <p>
+      This is made possible by using an API for each question we want to ask about a given place:
+      <ul>
+        <li>Where are we?: <b>Mapbox Places</b></li>
+        <li>What time is it? : <b>TimeZoneDB</b></li>
+        <li>What's the current weather? : <b>OpenWeatherMap</b></li>
+        <li><b>But most importantly, what's here?: the Overpass API</b></li>
+      </ul>
+    </p>
+
+    <p>
+      Overpass is our gateway to tap into the incredible richness of OpenStreetMap, as seen in, you know, that 2 kilometers long wiki page listing all the tags.
+    </p>
+
+    <figure>
+      <img class="medium" src="carpet-hanger.png">
       <figcaption>
-          A cat.
+        Even carpet hangers have their tag
       </figcaption>
     </figure>
 
-    <p>More text yeah</p>
-    
+
+    <h2>
+      An OpenStreetMap refresher
+    </h2>
+
+    <p>
+      OpenStreetMap can be a bit overwhelming at first. Not only it's a lot of data, but the software ecosystem that surrounds it is complex. So, the best place to start is there: <a href="http://openstreetmap.org">openstreetmap.org</a>. Thank you, captain obvious - now the thing is, that site is not very good at being a useful map, but it's excellent for what it was designed for, which is being an entry point and a debugging tool for OSM data.
+    </p>
+  
+    <figure>
+      <video autoplay loop muted playsinline class="medium">
+        <source src="query-features.webm" type="video/webm">
+      </video>
+      <figcaption>Poking at OSM data</figcaption>
+    </figure>
+  
+    <p>
+      Using that 'Query features' functionality is akin to what we'll be eventually doing to generate haikus. So far, what you see is a bunch of named objects. Looking further, you'll start noticing that these objects have <b>relationships</b>: a metro station belongs to a portion of a railway, which itself belongs to an entire metro line:
+    </p>
+
+    <figure>
+      <video autoplay loop muted playsinline class="medium">
+        <source src="query-features.webm" type="video/webm">
+      </video>
+      <figcaption>A node that belongs to a way that belongs to a relation</figcaption>
+    </figure>
+
+    <p>
+      And so goes the holy trinity of OSM: <b>Nodes, Ways, Relations</b>. A very common pattern being that a "conceptual" object (a metro line, a golf course, a ski resort) represented by a <b>relation</b>, and which does not have its own geometry, holds either a bunch of <b>nodes</b> (a golf hole) or a bunch of <b>ways</b> (a ski piste), which themselves hold nodes to form a line geometry.
+    </p>
+
     <hr />
-    <p>More text yeah</p>
+
+    <p>
+      Here goes the coolest part: any number of tags, of any form, can be added to any of those three types of objects. See for yourself:
+    </p>
+
+    <figure>
+      <video autoplay loop muted playsinline class="medium">
+        <source src="query-features-details.webm" type="video/webm">
+      </video>
+      <figcaption>Looking for tags</figcaption>
+    </figure>
+
+    <p>
+      Those tags are always composed of a <code>key=value</code> tuple, and are completely free form: anyone can add any tag they deem useful, there is no schema or spec of any sort. There are <b>conventions</b>, though. In general by way of consensus - see carpet hanger example, which was <a href="https://wiki.openstreetmap.org/wiki/Tag:man_made%3Dcarpet_hanger">approved at some point</a>. In fact there is a <a href="https://lists.openstreetmap.org/pipermail/tagging/">dedicated tagging mailing-list</a>, which is a fascinating place, with questions ranging from <a href="https://lists.openstreetmap.org/pipermail/tagging/2018-March/035405.html">tagging fraction house numbers?</a> and <a href="https://lists.openstreetmap.org/pipermail/tagging/2019-July/046358.html">choosing between bbq=yes or barbecue_grill=yes</a> to <em>much</em> more complicated geopolitical issues such as tagging <a href="https://lists.openstreetmap.org/pipermail/talk/2018-October/081553.html">disputed boundaries in Crimea</a>.
+    </p>
+
+    <hr />
+
+    <p>
+      This is very nice, but how do we programatically access this data? There is such a thing as <a href="https://wiki.openstreetmap.org/wiki/API_v0.6">an OpenStreetMap API</a>, but don't be fooled: the same way osm.org is not intended to be consumer facing, the OSM API is mostly designed to be used by editing software, as in, a lot of its endpoints are meant for writing, and reading operations are awkward for simple use cases.
+    </p>
+
+    <h2>
+      Taming Overpass
+    </h2>
+
+    <p>
+      Overpass is as read-only API to OpenStreetMap, which uses it's own query language, aptly named Overpass QL, and has it's own sandbox located at <a href="http://overpass-turbo.eu/">overpass-turbo.eu</a>.
+    </p>
+
+    <p>
+      Overpass is fantastic and weird and powerful and scary. Its query language is very terse, very OSM-specific, very powerful, and can be *a bit* putting off, especially for those of us not entirely fluent in <a href="https://en.wikipedia.org/wiki/Malbolge">Malbolge</a>. So, young and full of ideals, you head off to Overpass Turbo, which has a nifty "wizard" function. Except it's a "wizard", in the sense that it does black magic somewhow and leaves you, poor Muggle, quite out of it. It's more like a Saroumane kind of wizard really (and in his bad days).
+    </p>
+
+    <p>
+      My recommandation is to start here: go to <a href="http://overpass-turbo.eu/s/KIp">Overpass Turbo and find the Eiffel Tower, in Paris</a> (ouh lala), and copy paste the following:
+    </p>
+
+    TODO
+    Node only first
+    node trees
+    kebabs
+
+
+
+    <pre>
+      <code class="language-js">
+          node[natural=tree]({{bbox}});
+          out;
+      </code>
+    </pre>
+    
+    <p>
+      It says 'retrieve all the nodes (<code>node</code>) that represent trees (<code>[natural=tree]</code>) in the currently visible map area (<code>({{bbox}})</code>). Then give us the result of that query. Check out the nodes in the map, they have extra information such as circumference, height, and even genus of the trees!
+    </p>
+    
+
+    <pre>
+      <code class="language-js">
+        [out:json];
+        node[cuisine=kebab]({{bbox}});
+        out body;
+      </code>
+    </pre>
+
+
+    <p>
+      Bla bla ready for the wizard
+    </p>
+
+    <figure>
+      <img class="medium" src="wizard.png">
+      <figcaption>
+        The wizard-generated query, tore apart
+      </figcaption>
+    </figure>
+
+
+
+    <p>
+      Bla bla the Haiku Overpass QL query
+    </p>
+  
+
+    <pre>
+        <code class="language-js">
+            const ql = `
+              [out:json][timeout:5];
+
+              (
+                nwr[~"."~"."](around:${radius},${lat},${lng});
+              <;);out tags ${center};
+
+              (
+                way[~"landuse|landcover|natural"~"."](around:${radius * 4},${lat},${lng});
+              );out tags ${center};
+
+              is_in(${lat},${lng})->.a;
+              relation(pivot.a);
+              out tags ${center};
+            `
+        </code>
+      </pre>
+
+
+    <h2>
+      Artistic purpose
+    </h2>
+
+    <p>
+      TODO: Katsuda, subjective view, hommage to haiku etc
+    </p>
+
+    <p>
+
+    </p>
+
+    <h2>
+      Isn't that kind of pointless?
+    </h2>
+
+    <figure>
+      <img class="medium" src="jurassic-park.jpg" alt="You were so preoccuppied with whether or not you could - you didn't stop to think if you should">
+      <figcaption>
+          You were so preoccuppied with whether or not you could - you didn't stop to think if you should.
+      </figcaption>
+    </figure>
+
+    <p>
+      Sure.
+    </p>
+
+    <p>
+      But I also want to say: "you were so preoccupied by your dashboards that you didn't stop to think whether you were having fun".
+    </p>
+
+    <p>
+        In this era of big data, analytics and dashboards, maybe there’s room for a little bit of subjectivity, sensation, and anecdote.  In line with small data manifesto. Maybe OpenStreetMap Haiku has more appeal to some than 4 billion nodes. 
+        This is nothing more than an experiment, but this is in line with what we try to inject in our <a href="http://satellitestud.io">work</a>: more empathy, more beauty and yes, why not, more poetry. 
+    </p>
+
+
+    <h2>Hey what about neural nets ?</h2>
+
+    <p>
+      Yes, that would be the next step. Training a neural net trained on a database of haikus or poetry and force themes according to OSM tags. <a href="https://www.newscientist.com/article/2140014-neural-network-poetry-is-so-bad-we-think-its-written-by-humans/">Neural net poetry is not a new idea, in fact</a>.
+    </p>
+
+    <p>
+      And training neural nets on text datasets can yield hilarious results, as seen in the work of <a href="https://aiweirdness.com/">Janelle Shane</a> (see <a href="https://aiweirdness.com/post/160407271482/metal-band-names-invented-by-neural-network">metal band names</a>, <a href="https://aiweirdness.com/post/140219420017/the-silicon-gourmet-training-a-neural-network-to">recipes</a>, <a href="https://aiweirdness.com/post/159132506927/in-which-a-neural-network-learns-to-tell">knock-knock jokes</a>
+  </p>
+     
+  <p>
+    TODO
+  </p>
+
+  <p>
+        We like our low-tech haiku generator as it is for now. But stay tuned :)
+    </p>
+
+
   </article>
   <script src="../../lib/prism.js"></script>
   <script src="../../index.js"></script>

@@ -2,6 +2,8 @@
   --black: #111;
   --white: #efefef;
   --lightgrey: rgba(0, 0, 0, 0.3);
+  --link: #77392B;
+  --link-hover: #FF4013; 
 }
 
 @font-face {
@@ -93,9 +95,20 @@ ol,
 ul,
 h1,
 h2,
-pre {
+pre,
+footer {
   max-width: 70rem;
   margin: 4rem auto !important;
+}
+
+footer {
+  font-size: 1.8rem;
+  text-align: right;
+  font-style: italic;
+}
+
+footer > * {
+  display: inline;
 }
 
 cite {
@@ -140,12 +153,37 @@ img.small, video.small {
 
 a {
   text-decoration: none;
-  border-bottom-style: double;
-  border-bottom-color: var(--lightgrey);
+  /* border-bottom-style: double;
+  border-bottom-color: var(--lightgrey); */
+
+  color: var(--link);
+  background-size: 1px 1em;
+  box-shadow:
+    inset 0 -0.075em var(--white),
+    inset 0 -0.100em var(--link),
+    inset 0 -0.150em var(--white),
+    inset 0 -0.175em var(--link);
+  display: inline;
+  text-shadow:
+    -1px -1px var(--white),
+    -1px 1px var(--white),
+    1px -1px var(--white),
+    1px 1px var(--white);
+}
+
+a:hover {
+  color: var(--link-hover);
+  box-shadow:
+  inset 0 -0.175em var(--white),
+  inset 0 -0.200em var(--link-hover),
+  inset 0 -0.250em var(--white),
+  inset 0 -0.275em var(--link-hover);
 }
 
 a#logo {
   border: 0;
+  text-shadow: none;
+  box-shadow: none;
 }
 
 pre {

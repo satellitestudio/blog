@@ -59,32 +59,31 @@
     <hr />
 
     <p>
-      Here's what's happening: we automated making haikus about places. Looking at every identifiable object from the surroundings of a point, we can generate a poem about any place in the world. The result is sometimes fun, often weird, most of the time pretty terrible. Probably horrifying for haiku purists (sorry). Go ahead and <a href="http://satellitestud.io/osm-haiku/app/">give it a try</a>.
+      Here's what's happening: we automated making haikus about places. Looking at every object from the surroundings of a point, we can generate a poem about any place in the world. The result is sometimes fun, often weird, most of the time pretty terrible. And probably horrifying for haiku purists (sorry). Go ahead and <a href="http://satellitestud.io/osm-haiku/app/">give it a try</a>.
     </p>
 
     <p>
-      Those text collages are assembled collecting information about a place, taken from OpenStreetMap. Our little haiku project is the <strong>perfect opportunity to understand how OpenStreetMap data works.</strong>
+      Those text bits are assembled collecting information about a place, taken from OpenStreetMap. In this post, we'll take advantage of this little haiku project to <strong>understand how OpenStreetMap data works.</strong>
     </p>
       
     <hr />
 
     <p>
-      As they say: “OpenStreetMap is not a map®”. One can really think about as a gigantic, flat, database of all the things in the world. In fact, there is such a thing as a list of all the things in the world, check it out: <a href="https://wiki.openstreetmap.org/wiki/Map_Features">all OSM tags on the OSM wiki</a>. Considering this is nothing less than an attempt at methodically <strong>classifying our reality</strong>, yes, it makes for a pretty damn long wiki page.
+      As they say: “OpenStreetMap is not a map®”. One can rather think about OSM as a gigantic database of all the things in the world. In fact, there is such a thing as a list of all the things in the world, check it out: <a href="https://wiki.openstreetmap.org/wiki/Map_Features">OSM map features</a>.
+    </p>
+    <p>Hey, this is nothing less than an attempt at methodically <strong>classifying our reality</strong>. So yes, it is a pretty damn long wiki page. You were warned.
     </p>
 
-    TODO capture
-
     <p>
-      In OpenStreetMap Haiku, we take advantage of that crazy database by matching OSM tags with random (badly written) verses.<br>
-      For example, if a supermarket is close to the map center (an object has a tag <code>shop=supermarket</code>), we would randomly yield one of: <em>"Salad cabbage and carrots"</em>, <em>"The cashier’s bored"</em> or <em>"A lonely aisle"</em> (etc).<br>
+      In OpenStreetMap Haiku, we use that crazy amount of data by matching OSM tags with random verses.<br>
+      For example, if a supermarket is close to the map center (an object has a tag <code>shop=supermarket</code>), it would randomly yield one of: <em>"Salad cabbage and carrots"</em>, <em>"The cashier’s bored"</em> or <em>"A lonely aisle"</em> (etc).<br>
       A swimming pool (tag <code>leisure=swimming_pool</code>): ‘Smells of chlorine’.<br>
-      A garage (tag <code>building=garage</code>): ‘In the garage where I belong’ (shameless Weezer fan here).<br>
       A coffee shop named ‘Grey House’ (tags <code>amenity=cafe</code> and <code>name=‘Grey House’</code>: “Fresh coffee from Grey House”.<br>
       And so on.
     </p>
 
     <p>
-      That set of verses is easily extendable - <a href="https://github.com/satellitestudio/osm-haiku/edit/master/app/lines.en.js">have a look and add yours :)</a>. We'll see later how we also take into account the weather and time of the day, but for now let's focus on the geographical aspect of things: <strong>OpenStreetMap</strong> and the mighty <strong>Overpass</strong>. We'll see how Overpass is our gateway to tap into the incredible richness of OpenStreetMap.
+      That set of verses is easily extensible - <a href="https://github.com/satellitestudio/osm-haiku/edit/master/app/lines.en.js">have a look and add yours :)</a>. We'll see later how we also take into account the weather and time of the day, but for now let's focus on the geographical aspect of things: <strong>OpenStreetMap</strong> and the mighty <strong>Overpass</strong>. We'll see how Overpass is our gateway to tap into the incredible richness of OpenStreetMap.
     </p>
 
     <hr />
@@ -102,8 +101,8 @@
     </h2>
 
     <p>
-      OpenStreetMap can be a bit overwhelming at first. Not only it's a lot of data, but the software ecosystem that surrounds is diverse and complex. The best place to start is there: <a href="http://openstreetmap.org">openstreetmap.org</a>.<br>
-      Yes thank you, Captain Obvious. Thing is, while osm.org is actually not great at being a useful map, it is though excellent for what it was really designed for: being an entry point and a debugging tool for OpenStreetMap data.
+      OpenStreetMap can be a bit overwhelming at first. Not only it's a lot of data, but the software ecosystem that surrounds it is diverse and complex. Might seem obvious, but the best place to start is there: <a href="http://openstreetmap.org">openstreetmap.org</a>.<br>
+      Counter-intuitively, openstreetmap.org is not great at being a useful map and doesn't really try to be. It is excellent though, as an entry point and a exploration tool for OpenStreetMap data.
     </p>
   
     <figure>
@@ -114,7 +113,7 @@
     </figure>
   
     <p>
-      Using that 'Query features' functionality is pretty much what we'll be eventually doing to generate haikus. So far, what you see is a bunch of named objects. Looking further, you'll start noticing that these objects have <strong>relationships</strong>: a metro station belongs to a portion of a railway, which itself belongs to an entire metro line:
+      Using that 'Query features' functionality is pretty much what we'll be programmatically doing to generate haikus. So far, what you see is a bunch of named objects. Looking further, you'll start noticing that these objects have <strong>relationships</strong>: a metro station belongs to a portion of a railway, which itself belongs to an entire metro line:
     </p>
 TODO replace video with actual metro line example
     <figure>
@@ -125,13 +124,13 @@ TODO replace video with actual metro line example
     </figure>
 
     <p>
-      And so goes the holy trinity of OpenStreetMap: <strong>Nodes, Ways, Relations</strong>. Typically an object (a metro line, a golf course, a ski resort) can be represented by a <strong>relation</strong>. This relation does not have its own geometry, but it links to either a bunch of <strong>nodes</strong> (a golf hole) or a bunch of <strong>ways</strong> (a ski piste), which themselves link to nodes to form a line geometry.
+      And so goes the holy trinity of OpenStreetMap: <strong>Nodes, Ways, Relations</strong>. Typically an object (a metro line, a golf course, a ski resort) can be represented by a <strong>relation</strong>. This relation does not have its own geometry, but rather links to either a bunch of points aka <strong>nodes</strong> (a golf hole) or a bunch of lines aka <strong>ways</strong> (a ski piste), which themselves link to point nodes.
     </p>
 
     <hr />
 
     <p>
-      Here goes the coolest part: any number of tags, of any form, can be added to any of those three types of objects. See for yourself:
+      Those three basic primitives can each hold an unlimited amount of data. Any number of <strong>tags</strong>, of any form, can be added to any of those three types of objects. See for yourself:
     </p>
 
     <figure>
@@ -148,7 +147,7 @@ TODO replace video with actual metro line example
     <hr />
 
     <p>
-      This is very nice, but how do we programatically access this data? There is such a thing as <a href="https://wiki.openstreetmap.org/wiki/API_v0.6">an OpenStreetMap API</a>. We should avoid using it for simple read-only scenarios. The OSM API is mostly designed to be used by editing software, a lot of its endpoints are meant for writing, and reading operations are awkward for simple use cases.
+      This is very nice, but how do we programatically access this data? There is such a thing as <a href="https://wiki.openstreetmap.org/wiki/API_v0.6">an OpenStreetMap API</a>. But we should avoid using it for simple read-only scenarios. The OSM API is mostly designed to be used by editing software, a lot of its endpoints are meant for writing, and reading operations are awkward for simple use cases. So here comes our joker:
     </p>
 
     <h2>
@@ -156,12 +155,12 @@ TODO replace video with actual metro line example
     </h2>
 
     <p>
-      Overpass is a read-only API to OpenStreetMap, which uses its own query language, <strong><a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL">Overpass QL</a></strong>, and has its own handy sandbox located at <a href="http://overpass-turbo.eu/">overpass-turbo.eu</a>.
+      Overpass is a read-only API to OpenStreetMap, which uses its own query language, <strong><a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL">Overpass QL</a></strong>, and has its own handy sandbox tool located at <a href="http://overpass-turbo.eu/">overpass-turbo.eu</a>.
     </p>
 
     <p>
-      Overpass is fantastic and weird and powerful and scary. Its query language is very terse, very OSM-specific, very powerful, and can be *a bit* putting off, especially for those of us not entirely fluent in <a href="https://en.wikipedia.org/wiki/Malbolge">Malbolge</a>.<br>
-      So, young and full of ideals, you head off to Overpass Turbo, and ooh look it has a friendly "wizard" function. It is a "Wizard", indeed: it does black magic somewhow and leaves you, poor Muggle, quite out of it. It's more like a Saroumane kind of wizard really (and in his bad days).
+      Overpass is fantastic and weird and powerful and scary. Its query language is very terse, very OSM-specific, very powerful, and can be <em>slightly</em> off-putting, especially for those of us not entirely fluent in <a href="https://en.wikipedia.org/wiki/Malbolge">Malbolge</a>.<br>
+      So, young and full of ideals, you set out for <a href="http://overpass-turbo.eu/">overpass-turbo.eu</a>, and, oooh look: it has a friendly "wizard" function. Give it a go with the suggested params. It will generate a query on the left panel, but it's quite hard to tell what's going on. So, not quite the friendly wizard - more like black magic:
     </p>
     <pre>
         <code class="language-js">
@@ -189,7 +188,7 @@ TODO replace video with actual metro line example
     <hr />
 
     <p>
-      Let's work our way up to that Wizard-generated query. Go to <a href="http://overpass-turbo.eu/s/KIp">Overpass Turbo and find the Eiffel Tower, in Paris</a>, and copy paste the following:
+      Let's try to decipher Wizard-generated query. Go to <a href="http://overpass-turbo.eu/s/KIp">Overpass Turbo and find the Eiffel Tower, in Paris</a>, and copy paste the following:
     </p>
 
     <pre>
@@ -200,7 +199,7 @@ TODO replace video with actual metro line example
     </pre>
     
     <p>
-      What this says is 'retrieve all the nodes that represent trees (<code>[natural=tree]</code>) in the currently visible map area (<code>({{bbox}})</code>). Then give us the result of that query. Check out the nodes in the map, they have extra information such as circumference, height, and even the species of the trees! Now let's look at output options by looking at kebab places:
+      What this means is 'retrieve all the nodes that represent trees (<code>[natural=tree]</code>) in the currently visible map area (<code>({{bbox}})</code>). Then give us the result of that query. Check out the nodes appearing in the map when you click 'Run'. They have extra information such as circumference, height, and even the species of the trees! Now let's look at output options by looking at kebab places:
     </p>
     
 
@@ -213,7 +212,10 @@ TODO replace video with actual metro line example
     </pre>
     
     <p>
-      A nicer JSON output now replaced the default XML format (<code>[out:json];</code>), and we've asked for only the geometries, without the tags (<code>out skel;</code>). We also specified a specific area filter, a radius <code>around</code> a point, so the query should look for all kebab places in a 3000 meters radius around the Eiffel Tower <code>(around:3000,48.8605,2.2957)</code>, instead of the `bbox` specified by the frontend. Now let's explore hierarchical relations:
+      A nicer JSON output now replaced the default XML format (<code>[out:json];</code>), and we've asked for only the geometries, without the tags (<code>out skel;</code>). We also specified a specific area filter, a radius <code>around</code> a point, so the query should look for all kebab places in a 3000 meters radius around the Eiffel Tower <code>(around:3000,48.8605,2.2957)</code>, instead of the `bbox` specified by the frontend. You should see in the map various kebab restaurants around the Eiffel tower such as "Kebab Élysée" (click on the node id to access the full data on osm.org).
+    </p>
+    <p>
+      Now let's explore hierarchical relations with a bus stop/line:
     </p>
     
 
@@ -253,7 +255,7 @@ TODO replace video with actual metro line example
     </pre>
 
     <p>
-      This happened because we added that instruction: <code><;</code>, which means we want to retrieve all the objects "owning" the selected nodes: in that case, the relationship object representing the bus line, that this bus stop belongs to (<em>recursing up</em>). The next step is naturally to recurse down:
+      This happened because we added that instruction: <code><;</code> in our query, which means we want to retrieve all the objects "owning" the selected nodes: in that case, the relationship object representing the bus line, that this bus stop belongs to (<em>recursing up</em>). The next step is to <em>recurse down</em> from that:
     </p>
 
     <pre>
@@ -274,7 +276,13 @@ TODO replace video with actual metro line example
     </figure>
 
     <p>
-      Bla bla ready for the wizard
+      What happened? From a single bus stop, queried around a point, we queried the parent bus line <strong>relationship</strong>. Then we queried all the bus line "children", which resulted in visible geometries on the map: all the bus line stop nodes/points, as well as the actual itinerary of the bus line as a way/line.
+    </p>
+
+    <hr />
+
+    <p>
+      Hopefully this should have given you some clues to untangle that wizard-generated query, and more. Here's a useful breakdown:
     </p>
 
     <figure>
@@ -284,10 +292,10 @@ TODO replace video with actual metro line example
       </figcaption>
     </figure>
 
-
+    <h2>APIs for Haikus</h2>
 
     <p>
-      Bla bla the Haiku Overpass QL query
+      For OpenStreetMap Haiku we built an Overpass query that tries to answer the question "what's around that point?" (adapted from the query used in osm.org's "Query features" functionality):
     </p>
   
 
@@ -310,6 +318,17 @@ TODO replace video with actual metro line example
             `
         </code>
       </pre>
+
+    <p>
+      A few things to note:
+      <ul>
+        <li>it's a template where the clicked point latitude and longitude, and an hardcoded radius are injected;</li>
+        <li><code>nwr</code> is a shortcut to query all 3 of node, ways, and relations;</li>
+        <li><code>[~"."~"."]</code> will fetch all object that have any key and any value for it's tag, effectively discarding geometries <em>without</em> a tag;</li>
+        <li>there's a second query for <code>landuse|landcover|natural</code> tags with 4 times the set radius - the idea being that we want to "look further" for landscape features</li>
+      </ul>
+      Checkout <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL">the reference</a> for specific language elements.
+    </p>
     <hr>
       <p>
           This is made possible by using an API for each question we want to ask about a given place:

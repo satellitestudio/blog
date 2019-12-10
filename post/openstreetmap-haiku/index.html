@@ -59,11 +59,32 @@
     <hr />
 
     <p>
-      Here's what's happening: we automated making haikus about places. Looking at every object from the surroundings of a point, we can generate a poem about any place in the world. The result is sometimes fun, often weird, most of the time pretty terrible. And probably horrifying for haiku purists (sorry). Go ahead and <a href="http://satellitestud.io/osm-haiku/app/">give it a try</a>.
+      Here's what's happening: we automated making haikus about places. Looking at every object from the surroundings of a point, we can generate a poem about any place in the world. The result is sometimes fun, often weird, most of the time pretty terrible. Also probably horrifying for haiku purists (sorry). Go ahead and <a href="http://satellitestud.io/osm-haiku/app/">give it a try</a>.
+    </p>
+
+    <h2>But, why ?</h2>
+
+    <p>
+      That's a good question. Because we can ?
+    </p>
+
+    <figure>
+        <img class="medium" src="jurassic-park.jpg" alt="You were so preoccuppied with whether or not you could - you didn't stop to think if you should">
+        <figcaption>
+            You were so preoccuppied with whether or not you could - you didn't stop to think if you should.
+        </figcaption>
+      </figure>
+  
+    <p>
+      The original inspiration for this is a project called <a href="https://getnorth2018.com/previous-events/every-thing-every-time/">every thing every time</a> by Naho Matsuda. Her work aims at creating "impractical poetry" from a variety of data streams and sensors across the city: air quality, traffic, shift schedules, mosque prayers, etc. The result is then displayed in real time in the city streets. We've always been totally fascinated by the project, which at the time seemed a refreshing take, slightly impertinent, on the whole "smart cities" schtick.
     </p>
 
     <p>
-      Those text bits are assembled collecting information about a place, taken from OpenStreetMap. In this post, we'll take advantage of this little haiku project to <strong>understand how OpenStreetMap data works.</strong>
+      We found that creating an OpenStreetMap-based version of the same idea would be interesting, not the least because it would allow us to get our hands dirty with OSM data. 
+    </p>
+
+    <p>
+      So in OpenStreetMap Haiku, verses are randomly assembled collecting information about a place, taken from OpenStreetMap. This post goes through the steps involved, which hopefully should help <strong>understand how OSM data works.</strong>
     </p>
       
     <hr />
@@ -83,7 +104,7 @@
     </p>
 
     <p>
-      That set of verses is easily extensible - <a href="https://github.com/satellitestudio/osm-haiku/edit/master/app/lines.en.js">have a look and add yours :)</a>. We'll see later how we also take into account the weather and time of the day, but for now let's focus on the geographical aspect of things: <strong>OpenStreetMap</strong> and the mighty <strong>Overpass</strong>. We'll see how Overpass is our gateway to tap into the incredible richness of OpenStreetMap.
+      That set of verses is easily extensible - <a href="https://github.com/satellitestudio/osm-haiku/edit/master/app/lines.en.js">have a look and add yours :)</a>. We also take into account the weather and local time of the day, but for now let's focus on the geographical aspect of things: <strong>OpenStreetMap</strong> and the mighty <strong>Overpass</strong>. We'll see how Overpass is our gateway to tap into the incredible richness of OpenStreetMap.
     </p>
 
     <hr />
@@ -115,10 +136,10 @@
     <p>
       Using that 'Query features' functionality is pretty much what we'll be programmatically doing to generate haikus. So far, what you see is a bunch of named objects. Looking further, you'll start noticing that these objects have <strong>relationships</strong>: a metro station belongs to a portion of a railway, which itself belongs to an entire metro line:
     </p>
-TODO replace video with actual metro line example
+
     <figure>
       <video autoplay loop muted playsinline class="medium">
-        <source src="query-features.webm" type="video/webm">
+        <source src="query-metro.webm" type="video/webm">
       </video>
       <figcaption>A node that belongs to a way that belongs to a relation</figcaption>
     </figure>
@@ -321,84 +342,69 @@ TODO replace video with actual metro line example
 
     <p>
       A few things to note:
-      <ul>
-        <li>it's a template where the clicked point latitude and longitude, and an hardcoded radius are injected;</li>
-        <li><code>nwr</code> is a shortcut to query all 3 of node, ways, and relations;</li>
-        <li><code>[~"."~"."]</code> will fetch all object that have any key and any value for it's tag, effectively discarding geometries <em>without</em> a tag;</li>
-        <li>there's a second query for <code>landuse|landcover|natural</code> tags with 4 times the set radius - the idea being that we want to "look further" for landscape features</li>
-      </ul>
-      Checkout <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL">the reference</a> for specific language elements.
     </p>
-    <hr>
-      <p>
-          This is made possible by using an API for each question we want to ask about a given place:
-          <ul>
-            <li>Where are we?: <strong>Mapbox Places</strong></li>
-            <li>What time is it? : <strong>TimeZoneDB</strong></li>
-            <li>What's the current weather? : <strong>OpenWeatherMap</strong></li>
-            <li><strong>But most importantly, what's here?: the Overpass API</strong></li>
-          </ul>
-        </p>
+    <ul>
+      <li>it's a template where the clicked point latitude and longitude, and a hardcoded radius are injected;</li>
+      <li><code>nwr</code> is a shortcut to query all 3 of node, ways, and relations;</li>
+      <li><code>[~"."~"."]</code> will fetch all object that have any key and any value for it's tag, effectively discarding geometries <em>without</em> a tag;</li>
+      <li>there's a second query for <code>landuse|landcover|natural</code> tags with 4 times the set radius - the idea being that we want to "look further" for landscape features</li>
+    </ul>
+    <p>
+      Check out <a href="https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL">the Overpass QL reference</a> for specific language elements.
+    </p>
+
+    <h2>It's not only about where</h2>
+
+    <p>
+      Things get a bit more interesting when we not only look at "here", but also at "now". We're using two additional APIs for that:
+    </p>
+    <ul>
+      <li><a href="https://timezonedb.com/">TimeZoneDB</a> to get local time from a lat/lon pair</li>
+      <li><a href="https://openweathermap.org/api">OpenWeatherMap</a> for local weather.</li>
+    </ul>
+
+    <p>
+      This allows some really cool variations on the base verses, by adding conditions to some of them or injecting extra information in the templates. See for instance:
+    </p>
     
+    <pre>
+      <code class="language-js">
+        {
+          template: 'Is it too early for a beer?',
+          tags: [['amenity', 'pub']],
+          condition: (el, env) => env.moment === 'morning'
+        }
+      </code>
+    </pre>
 
-    <h2>
-      Artistic purpose
-    </h2>
+    <pre>
+      <code class="language-js">
+        {
+          template: 'Heat on the paving stones',
+          tags: [['surface', 'paving_stones']],
+          condition: (el, env) => env.temperature > 20
+        },
+      </code>
+    </pre>
 
-    <p>
-      TODO: Katsuda, subjective view, hommage to haiku etc
-    </p>
 
-    <p>
-
-    </p>
-
-    <h2>
-      Isn't that kind of pointless?
-    </h2>
-
-    <figure>
-      <img class="medium" src="jurassic-park.jpg" alt="You were so preoccuppied with whether or not you could - you didn't stop to think if you should">
-      <figcaption>
-          You were so preoccuppied with whether or not you could - you didn't stop to think if you should.
-      </figcaption>
-    </figure>
-
-    <p>
-      Sure.
-    </p>
+    <h2>Hey why didn't you use neural nets ?</h2>
 
     <p>
-      But I also want to say: "you were so preoccupied by your dashboards that you didn't stop to think whether you were having fun".
-    </p>
-
-    <p>
-        In this era of big data, analytics and dashboards, maybe there’s room for a little bit of subjectivity, sensation, and anecdote.  In line with small data manifesto. Maybe OpenStreetMap Haiku has more appeal to some than 4 billion nodes. 
-        This is nothing more than an experiment, but this is in line with what we try to inject in our <a href="http://satellitestud.io">work</a>: more empathy, more beauty and yes, why not, more poetry. 
-    </p>
-
-
-    <h2>Hey what about neural nets ?</h2>
-
-    <p>
-      Yes, that would be the next step. Training a neural net trained on a database of haikus or poetry and force themes according to OSM tags. <a href="https://www.newscientist.com/article/2140014-neural-network-poetry-is-so-bad-we-think-its-written-by-humans/">Neural net poetry is not a new idea, in fact</a>.
+      Yes, that would be the next step. Training a neural net on a database of haikus or poetry and somehow direct the output according to OSM tags. <a href="https://www.newscientist.com/article/2140014-neural-network-poetry-is-so-bad-we-think-its-written-by-humans/">Neural net poetry is not a new idea</a> in fact, and it's very intriguing.
     </p>
 
     <p>
       And training neural nets on text datasets can yield hilarious results, as seen in the work of <a href="https://aiweirdness.com/">Janelle Shane</a> (see <a href="https://aiweirdness.com/post/160407271482/metal-band-names-invented-by-neural-network">metal band names</a>, <a href="https://aiweirdness.com/post/140219420017/the-silicon-gourmet-training-a-neural-network-to">recipes</a>, <a href="https://aiweirdness.com/post/159132506927/in-which-a-neural-network-learns-to-tell">knock-knock jokes</a>
   </p>
-     
-  <p>
-    TODO
-  </p>
 
   <p>
-        We like our low-tech haiku generator as it is for now. But stay tuned :)
-    </p>
+      We like our low-tech haiku generator as it is for now. But stay tuned :)
+  </p>
 
 
   <footer>
-    Published <time pubdate datetime="2019-10-20" title="October 20th, 2019">October 20th, 2019</time> by
+    Published <time pubdate datetime="2019-12-10" title="December 10th, 2019">December 10th, 2019</time> by
     <address class="author"><a rel="author" href="http://twitter.com/nerik">Erik</a></address> on <a href="http://satellitestud.io">Satellite Studio</a> blog.
   </footer>
 

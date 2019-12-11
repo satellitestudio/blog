@@ -101,6 +101,10 @@ footer {
   margin: 4rem auto !important;
 }
 
+h2 {
+  margin-top: 8rem !important;
+}
+
 footer {
   font-size: 1.8rem;
   text-align: right;
